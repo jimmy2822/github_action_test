@@ -1,10 +1,28 @@
-name: Rubocop
-on: [push]
+name: RuboCop
+
+on: [push, pull_request]
+
 jobs:
-  Explore-GitHub-Actions:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: RuboCop Linter Action
-        uses: andrewmcodes/rubocop-linter-action@v3.3.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v2
+    - name: Set up Ruby 3.0.0
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.0.0
+    - name: Cache gems
+      uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-rubocop-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-rubocop-
+    - name: Install gems
+      run: |
+        bundle config path vendor/bundle
+        bundle config set without 'default doc job cable storage ujs test db'
+        bundle install --jobs 4 --retry 3
+    - name: Run RuboCop
+      run: bundle exec rubocop --parallel
