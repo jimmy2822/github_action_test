@@ -10,17 +10,19 @@ jobs:
       postgres:
         # Docker Hub image
         image: postgres
-        # Provide the password for postgres
-      env:
-        POSTGRES_PASSWORD: postgres
-        # Set health checks to wait until postgres has started
-      options: >-
-        --health-cmd pg_isready
-        --health-interval 10s
-        --health-timeout 5s
-        --health-retries 5
+        # Provide the password for postgres env:
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Ruby 3.0.0
       uses: ruby/setup-ruby@v1
       with:
@@ -35,6 +37,8 @@ jobs:
     - name: Install gems
       run: |
         bundle install --jobs 4 --retry 3
+    - name: Setup database
+      run: bundle exec rails db:create
     - name: Run RuboCop
       run: bundle exec rubocop --parallel
     - name: Run Rspec
