@@ -23,6 +23,10 @@ RSpec/BeforeAfterAll:
     - spec/features/**/*.rb
     - spec/support/shared_context/*.rb
     - spec/support/shared_context/**/*.rb
+RSpec/ExampleLength:
+  Exclude:
+    - spec/features/*.rb
+    - spec/features/**/*.rb
 Rails/ReflectionClassName:
   Exclude:
     - app/models/concerns/notification_noticible.rb

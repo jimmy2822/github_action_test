@@ -18,33 +18,33 @@ end
 describe 'tasks', type: :feature do
   before do
     create(:task)
-
-    within('#task_form') do
-      fill_in 'task[title]', with: 'newtask'
-      fill_in 'task[content]', with: 'iamanewtask'
-      fill_in 'task[tag]', with: 'test'
-    end
   end
 
   it 'when create task' do
     visit new_task_path
     click_button '新增'
 
+    within('#task_form') do
+      fill_in 'task[title]', with: 'newtask'
+      fill_in 'task[content]', with: 'iamanewtask'
+      fill_in 'task[tag]', with: 'test'
+    end
+
     task = Task.last
     expect(task.title).to eq('newtask')
   end
 
   context 'when edit' do
-    within('#task_form') do
-      fill_in 'task[title]', with: 'changetitle'
-      fill_in 'task[content]', with: 'new content'
-      fill_in 'task[tag]', with: 'newtag'
-    end
-
     it 'when edit task' do
       visit root_path
       click_link '編輯'
       click_button '修改'
+
+      within('#task_form') do
+        fill_in 'task[title]', with: 'changetitle'
+        fill_in 'task[content]', with: 'new content'
+        fill_in 'task[tag]', with: 'newtag'
+      end
 
       task = Task.last
       expect(task.title).to eq('changetitle')
