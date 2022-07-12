@@ -22,29 +22,30 @@ describe 'tasks', type: :feature do
 
   it 'when create task' do
     visit new_task_path
-    click_button '新增'
 
-    within('#task_form') do
+    within(id: 'task_form') do
       fill_in 'task[title]', with: 'newtask'
       fill_in 'task[content]', with: 'iamanewtask'
       fill_in 'task[tag]', with: 'test'
     end
 
+    click_button '新增'
     task = Task.last
     expect(task.title).to eq('newtask')
   end
 
   context 'when edit' do
-    it 'when edit task' do
+    it 'updates title' do
       visit root_path
       click_link '編輯'
-      click_button '修改'
 
-      within('#task_form') do
+      within(id: 'task_form') do
         fill_in 'task[title]', with: 'changetitle'
         fill_in 'task[content]', with: 'new content'
         fill_in 'task[tag]', with: 'newtag'
       end
+
+      click_button '修改'
 
       task = Task.last
       expect(task.title).to eq('changetitle')
