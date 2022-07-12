@@ -1,0 +1,63 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.0.0
+  DisplayCopNames: true
+  SuggestExtensions: false
+  NewCops: enable
+  Exclude:
+    - db/seeds.rb
+    - bin/*
+    - vendor/ruby/**/*
+    - node_modules/**/*
+    - db/schema.rb
+    - .licenses/**/*
+    - bin/*
+Rails:
+  Enabled: true
+RSpec/BeforeAfterAll:
+  Exclude:
+    - spec/features/*.rb
+    - spec/features/**/*.rb
+    - spec/support/shared_context/*.rb
+    - spec/support/shared_context/**/*.rb
+Rails/ReflectionClassName:
+  Exclude:
+    - app/models/concerns/notification_noticible.rb
+Rails/LexicallyScopedActionFilter:
+  Exclude:
+    - app/controllers/concerns/resources/base.rb
+    - app/controllers/admin/*
+Style/FormatStringToken:
+  Exclude:
+    - config/routes.rb
+Lint/MissingSuper:
+  Exclude:
+    - app/components/*
+    - app/components/**/*
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - staging
+    - development
+    - test
+Metrics:
+  Exclude:
+    - db/migrate/*
+    - Rakefile
+    - Gemfile
+    - config/**/*
+    - spec/**/*
+    - lib/tasks/**/*
+Metrics/ClassLength:
+  Max: 120
+Metrics/BlockLength:
+  Exclude:
+    - config/routes.rb
+    - config/environments/*
+    - lib/tasks/**/*
+    - spec/**/*
+Style/Documentation:
+  Enabled: false

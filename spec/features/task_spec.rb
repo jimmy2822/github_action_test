@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 FactoryBot.define do
@@ -8,75 +10,53 @@ FactoryBot.define do
     tag { Faker::String.random(length: 4) }
     start_time { Faker::Time.between(from: DateTime.now - 1, to: DateTime.now, format: :default) }
     end_time { Faker::Time.between(from: DateTime.now, to: DateTime.now + 1, format: :default) }
-    priority { "高" }
-    state { "處理中" }
+    priority { '高' }
+    state { '處理中' }
   end
 end
 
-feature "tasks", :type => :feature do
+describe 'tasks', type: :feature do
+  before do
+    create(:task)
 
-  before(:each) do
-    FactoryBot.create(:task)
+    within('#task_form') do
+      fill_in 'task[title]', with: 'newtask'
+      fill_in 'task[content]', with: 'iamanewtask'
+      fill_in 'task[tag]', with: 'test'
+    end
   end
 
-  scenario "when create task" do
-
+  it 'when create task' do
     visit new_task_path
-
-    expect(page).to have_content("新增任務")
-
-    within("#task_form") do
-      fill_in "task[title]", with: "newtask"
-      fill_in "task[content]", with: "iamanewtask"
-      fill_in "task[tag]", with: "test"
-    end
-
-    click_button "新增"
-    
-    expect(page).to have_content("newtask")
+    click_button '新增'
 
     task = Task.last
-    expect(task.title).to eq("newtask")
+    expect(task.title).to eq('newtask')
   end
-  
-  scenario "when edit task" do
 
-    visit root_path
-
-    expect(page).to have_content("Task")
-
-    click_link "編輯"
-
-    expect(page).to have_content("編輯任務")
-
-    within("#task_form") do
-      fill_in "task[title]", with: "changetitle"
-      fill_in "task[content]", with: "new content"
-      fill_in "task[tag]", with: "newtag"
+  context 'when edit' do
+    within('#task_form') do
+      fill_in 'task[title]', with: 'changetitle'
+      fill_in 'task[content]', with: 'new content'
+      fill_in 'task[tag]', with: 'newtag'
     end
 
-    click_button "修改"
-    
-    expect(page).to have_content("changetitle")
-    expect(page).to have_content("new content")
-    expect(page).to have_content("newtag")
+    it 'when edit task' do
+      visit root_path
+      click_link '編輯'
+      click_button '修改'
 
-    task = Task.last
-    expect(task.title).to eq("changetitle")
+      task = Task.last
+      expect(task.title).to eq('changetitle')
+    end
   end
-  
-  scenario "when delete task" do
 
+  it 'when delete task' do
     visit root_path
 
-    expect(page).to have_content("Task")
+    click_link '刪除'
 
-    click_link "刪除"
-    
-    expect(page).to have_no_content("apple")
-
-    task = Task.find_by title: "apple"
+    task = Task.find_by title: 'apple'
     expect(task).to be_nil
   end
-
 end
